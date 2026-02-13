@@ -25,7 +25,7 @@ export function Container(props: ContainerProps) {
     props.type === "article"
       ? {
           publishedTime: props.date,
-          tags: props.tags ? props.tags.map((tag) => tag.tagName) : [],
+          tags: props.tags ? props.tags.filter((t) => t).map((tag) => tag.tagName) : [],
           authors: props.author
             ? [`https://${locale === "ru" ? "" : "pl."}addict.cf/author/${props.author.authorSlug}`]
             : [""],

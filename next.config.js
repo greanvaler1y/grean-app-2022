@@ -12,7 +12,7 @@ module.exports = {
   eslint: {
     dirs: ["."],
   },
-  swcMinify: true,
+  swcMinify: false,
   reactStrictMode: true,
   i18n: {
     defaultLocale: "ru",

@@ -1,17 +1,18 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-console */
 import algoliasearch from "algoliasearch";
-import dotenv from "dotenv";
 
 import { getPosts } from "./getPosts";
 import { LOCALIZED_ALGOLIA_INDICES } from "./global.config";
 
-dotenv.config();
+const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
+const apiKey = process.env.ALGOLIA_SEARCH_ADMIN_KEY;
 
-const algoliaInstance = algoliasearch(
-  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
-  process.env.ALGOLIA_SEARCH_ADMIN_KEY
-);
+if (!appId || !apiKey) {
+  console.warn("Algolia environment variables are missing. Skipping index generation.");
+}
+
+const algoliaInstance = appId && apiKey ? algoliasearch(appId, apiKey) : null;
 
 const generateIndexPerLocale = async (indexName: string, locale: string) => {
   const data = await getPosts(locale);
@@ -43,6 +44,9 @@ const generateIndexPerLocale = async (indexName: string, locale: string) => {
 };
 
 export default async function generateAlgoliaIndex() {
+  if (!algoliaInstance) {
+    return;
+  }
   // eslint-disable-next-line no-restricted-syntax
   for await (const i of LOCALIZED_ALGOLIA_INDICES) {
     generateIndexPerLocale(i.indexName, i.locale);

@@ -24,23 +24,23 @@ export default function Post({ post, relatedPosts }: Props) {
   }
   return (
     <Container
-      title={post.postTitle}
-      ogImage={post.postImageUrl}
-      date={post.postDate}
+      title={post?.postTitle ?? ""}
+      ogImage={post?.postImageUrl ?? ""}
+      date={post?.postDate}
       type="article"
-      description={post.postText}
-      tags={post.tags}
-      author={post.author}
+      description={post?.postText}
+      tags={post?.tags}
+      author={post?.author}
     >
       <div className="mx-auto flex max-w-2xl flex-col items-start justify-center pb-16">
         <div className="flex flex-col">
           <h1 className="gradient-header text-3xl font-bold tracking-tight md:text-5xl">
-            {post.postTitle}
+            {post?.postTitle ?? ""}
           </h1>
           <div className="mb-2 flex flex-row justify-end py-2 text-sm">
-            <Tags tags={post.tags} />
+            <Tags tags={post?.tags ?? []} />
           </div>
-          <SanityImage alt={post.postTitle} url={post.postImageUrl} />
+          <SanityImage alt={post?.postTitle ?? ""} url={post?.postImageUrl ?? ""} />
 
           <div className="mt-4 mb-6 flex flex-row">
             <PostMeta date={post.postDate} readingTime={post.readingTime} author={post.author} />
@@ -60,7 +60,7 @@ export async function getStaticPaths({ locales }: { locales: string[] }) {
   const allPathsWithLocales = allPosts
     .map(({ slug }) =>
       locales.map((locale) => ({
-        params: { slug: `/blog/${slug}` },
+        params: { slug: `${slug}` },
         locale,
       }))
     )
@@ -72,10 +72,18 @@ export async function getStaticPaths({ locales }: { locales: string[] }) {
 }
 
 export async function getStaticProps({ params, locale }: { params: IParams; locale: string }) {
-  const { relatedPosts, ...post } = await getPostAndRelatedPosts(
+  const data = await getPostAndRelatedPosts(
     locale,
     params.slug.replace(/\/$/, "").split("/").pop() as string
   );
+
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const { relatedPosts, ...post } = data;
   return {
     props: {
       post,

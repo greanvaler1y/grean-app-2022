@@ -17,19 +17,19 @@ type Props = UnwrapPromise<ReturnType<typeof getStaticProps>>["props"];
 export default function Author({ author, authorPosts }: Props) {
   const t = useTranslations("Titles");
   return (
-    <Container title={author.authorName} ogImage={author.authorPicture}>
+    <Container title={author?.authorName ?? ""} ogImage={author?.authorPicture ?? ""}>
       <div className="mx-auto flex max-w-2xl flex-col items-start justify-center border-gray-200 pb-16 dark:border-gray-700">
         {author && (
           <>
             <PageTop
-              title={author.authorName}
+              title={author?.authorName ?? ""}
               subtitle=""
               // socials={author.authorSocials}
-              pictureUrl={author.authorPicture}
-              text={author.authorBio}
+              pictureUrl={author?.authorPicture ?? ""}
+              text={author?.authorBio}
             />
             <SectionSeparator />
-            <Subtitle>{`${t("author_related_articles")}${author.authorName}`}</Subtitle>
+            <Subtitle>{`${t("author_related_articles")}${author?.authorName ?? ""}`}</Subtitle>
           </>
         )}
         {authorPosts && authorPosts.length > 0 && <PostsGrid posts={authorPosts} />}
@@ -44,7 +44,7 @@ export async function getStaticPaths({ locales }: { locales: string[] }) {
     .map(({ slug }) =>
       locales.map((locale) => ({
         params: {
-          slug: `/author/${slug}`,
+          slug: `${slug}`,
         },
         locale,
       }))
@@ -57,10 +57,18 @@ export async function getStaticPaths({ locales }: { locales: string[] }) {
 }
 
 export async function getStaticProps({ params, locale }: { params: IParams; locale: string }) {
-  const { authorPosts, ...author } = await getAuthorAndRelatedPosts(
+  const data = await getAuthorAndRelatedPosts(
     locale,
     params.slug.replace(/\/$/, "").split("/").pop() as string
   );
+
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const { authorPosts, ...author } = data;
   return {
     props: {
       author,

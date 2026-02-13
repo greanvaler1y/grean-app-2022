@@ -29,11 +29,11 @@ export function PostCard({
     <div className="my-4 md:my-0">
       <SanityImage slug={slug} alt={title} url={previewImage} />
       <h4 className="post-header-link mt-4 mb-2 w-full text-lg  font-medium">
-        <Link href={`/blog/${slug}`}>
+        <Link href={`/blog/${slug}`} legacyBehavior>
           <a>{truncate(title)}</a>
         </Link>
       </h4>
-      <div className="mb-2 flex flex-row justify-end text-sm">{<Tags tags={tags} />}</div>
+      <div className="mb-2 flex flex-row justify-end text-sm">{<Tags tags={tags ?? []} />}</div>
       <div className="flex flex-row ">
         <PostMeta date={date} readingTime={readingTime === 0 ? 1 : readingTime} author={author} />
       </div>

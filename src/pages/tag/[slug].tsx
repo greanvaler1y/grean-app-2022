@@ -17,20 +17,20 @@ type Props = UnwrapPromise<ReturnType<typeof getStaticProps>>["props"];
 export default function Tag({ tag, sameTagPosts }: Props) {
   const t = useTranslations("Titles");
   return (
-    <Container title={tag.tagName} ogImage={tag.tagPicture}>
+    <Container title={tag?.tagName ?? ""} ogImage={tag?.tagPicture ?? ""}>
       <div className="mx-auto flex max-w-2xl flex-col items-start justify-center pb-16">
         {tag && (
           <>
             <PageTop
-              title={tag.tagName}
+              title={tag?.tagName ?? ""}
               subtitle=""
-              pictureUrl={tag.tagPicture}
-              text={tag.tagText}
+              pictureUrl={tag?.tagPicture ?? ""}
+              text={tag?.tagText}
             />
             <SectionSeparator />
             <Subtitle>
               {`${t("tag_related_articles")}
-              "${tag.tagName.toLowerCase()}"`}
+              "${(tag?.tagName ?? "").toLowerCase()}"`}
             </Subtitle>
           </>
         )}
@@ -46,7 +46,7 @@ export async function getStaticPaths({ locales }: { locales: string[] }) {
     .map(({ slug }) =>
       locales.map((locale) => ({
         params: {
-          slug: `/tag/${slug}`,
+          slug: `${slug}`,
         },
         locale,
       }))
@@ -59,10 +59,18 @@ export async function getStaticPaths({ locales }: { locales: string[] }) {
 }
 
 export async function getStaticProps({ params, locale }: { params: IParams; locale: string }) {
-  const { sameTagPosts, ...tag } = await getTagAndRelatedPosts(
+  const data = await getTagAndRelatedPosts(
     locale,
     params.slug.replace(/\/$/, "").split("/").pop() as string
   );
+
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const { sameTagPosts, ...tag } = data;
   return {
     props: {
       tag,

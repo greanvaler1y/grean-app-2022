@@ -19,12 +19,12 @@ const ptComponents = {
     },
     messageBox: ({ value }: { value: any }) => {
       return (
-        <div className="dark:bg-[#1e293b] mb-4 w-full text-black dark:text-yellow-50 rounded-lg bg-[#cccccc] p-4">
+        <div className="mb-4 w-full rounded-lg bg-[#cccccc] p-4 text-black dark:bg-[#1e293b] dark:text-yellow-50">
           <div className="flex flex-row">
             <h6 className="font-2xl font-semibold text-black dark:text-yellow-50">{`💡 ${value.title}`}</h6>
           </div>
           <div>
-            <div className="md:prose-lg w-full max-w-2xl text-black·dark:text-yellow-50">
+            <div className="md:prose-lg w-full max-w-2xl text-black dark:text-yellow-50">
               {value.message}
             </div>
           </div>

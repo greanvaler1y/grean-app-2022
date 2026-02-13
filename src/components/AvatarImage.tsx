@@ -9,6 +9,9 @@ export function AvatarImage({
   url: string;
   alt?: string;
 }) {
+  if (!url) {
+    return null;
+  }
   return (
     <div className="relative  sm:mx-0">
       <Img

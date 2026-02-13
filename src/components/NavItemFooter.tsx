@@ -7,7 +7,7 @@ import { getActiveStatus } from "@/utils/contentUtils";
 export function NavItemFooter({ href, text }: { href: string; text: string }) {
   const router = useRouter();
   return (
-    <Link href={href}>
+    <Link href={href} legacyBehavior>
       <a
         className={cn(
           getActiveStatus(href, router.asPath)

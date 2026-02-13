@@ -19,7 +19,7 @@ export function PaginationControls({
           <span>{` ← ${t("previous_page")}`}</span>
         </p>
       ) : (
-        <Link href={`/blog/p/${Number(currentPage - 1)}`}>
+        <Link href={`/blog/p/${Number(currentPage - 1)}`} legacyBehavior>
           <a className="group  inline-flex items-center text-base font-medium transition-all  delay-100 hover:text-orange-600 dark:hover:text-green-400">
             <span>{`← ${t("previous_page")}`}</span>
           </a>

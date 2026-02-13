@@ -21,17 +21,17 @@ export default function Index({ pageData, featuredPosts, total }: Props) {
   const t = useTranslations("Titles");
   return (
     <Container
-      title={pageData.pageTitle}
-      ogImage={pageData.pagePicture}
-      description={pageData.pageText}
+      title={pageData?.pageTitle ?? ""}
+      ogImage={pageData?.pagePicture ?? ""}
+      description={pageData?.pageText}
     >
       <div className="mx-auto flex max-w-2xl flex-col items-start  justify-center pb-16">
         {pageData && (
           <PageTop
-            title={pageData.pageTitle}
+            title={pageData?.pageTitle ?? ""}
             subtitle=""
-            pictureUrl={pageData.pagePicture}
-            text={pageData.pageText}
+            pictureUrl={pageData?.pagePicture ?? ""}
+            text={pageData?.pageText}
           />
         )}
         <div className="relative mb-4 w-full">
@@ -52,8 +52,13 @@ export async function getStaticProps({ locale }: { locale: string }) {
     // eslint-disable-next-line no-underscore-dangle
     .sort((a, b) => b._updatedAt - a._updatedAt)
     .slice(0, 6);
-  const pageData = await getPageContent(locale, "/");
+  const pageData = await getPageContent(locale, "blog_ob");
   const total = await getTotalPostsNumber();
+  if (!pageData) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: {
       pageData,

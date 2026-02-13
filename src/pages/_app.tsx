@@ -14,7 +14,7 @@ import { ThemeProvider } from "next-themes";
 import { Analytics } from "@/components/Analytics";
 import { SEO } from "@/utils/global.config";
 
-function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps<{ messages: any }>) {
   usePanelbear(process.env.NEXT_PUBLIC_PANELBEAR_SITE_ID, {
     debug: false,
   });
@@ -22,6 +22,7 @@ function App({ Component, pageProps }: AppProps) {
     <>
       <NextIntlProvider
         messages={pageProps.messages}
+        timeZone="Europe/Warsaw"
         formats={{
           dateTime: {
             Base: {

@@ -17,6 +17,9 @@ export function SanityImage({
   alt = "A placeholder text for image",
   slug = "",
 }: SanityImageType) {
+  if (!url) {
+    return null;
+  }
   const urlWithProps = urlFor(url).auto("format").url();
   const image = (
     <Img
